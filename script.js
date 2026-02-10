@@ -6,7 +6,11 @@ const difficultySettings = {
   hard: { dropSpeed: 3, spawnInterval: 600, difficultyIncrease: 0.8, spawnIntervalDecrease: 80 }
 };
 
-// Highscores
+let gameArea, scoreDisplay, messageDisplay, resetBtn, currentHighscoreDisplay;
+let score = 0, dropSize = 25, gameWidth, gameHeight, dropSpeed, spawnInterval;
+let gameRunning = false, drops = [], spawnIntervalId, difficultyIntervalId, gameLoopId;
+
+// Initialize highscores
 function initHighscores() {
   if (!localStorage.getItem('charityWaterHighscores')) {
     localStorage.setItem('charityWaterHighscores', JSON.stringify({ easy: 0, normal: 0, hard: 0 }));
@@ -32,21 +36,17 @@ function updateHighscore(score) {
   return false;
 }
 
-// Game variables
-let gameArea, scoreDisplay, messageDisplay, resetBtn, currentHighscoreDisplay;
-let score = 0, dropSize = 25, gameWidth, gameHeight, dropSpeed, spawnInterval;
-let gameRunning = false, drops = [], spawnIntervalId, difficultyIntervalId;
-
-// Initialize highscores
+// Initialize
 initHighscores();
 
-// Start Game & Menu buttons
+// Button Listeners
 document.querySelectorAll('.difficulty-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     currentDifficulty = btn.dataset.difficulty;
     startGame();
   });
 });
+
 document.getElementById('menuBtn').addEventListener('click', goToMenu);
 
 function startGame() {
@@ -58,8 +58,8 @@ function startGame() {
 function goToMenu() {
   document.getElementById('gamePage').classList.add('hidden');
   document.getElementById('startPage').classList.remove('hidden');
-  displayHighscores();
   stopGame();
+  displayHighscores();
 }
 
 function initializeGame() {
@@ -79,15 +79,13 @@ function initializeGame() {
   score = 0;
   scoreDisplay.textContent = score;
   currentHighscoreDisplay.textContent = JSON.parse(localStorage.getItem('charityWaterHighscores'))[currentDifficulty];
-
   messageDisplay.textContent = "Collect clean water. Avoid pollution!";
+
   drops = [];
   gameRunning = true;
 
-  // Clear any old drops
   gameArea.querySelectorAll('.drop').forEach(drop => drop.remove());
 
-  // FIXED: Only attach listener once (not multiple times)
   resetBtn.onclick = resetGame;
 
   spawnIntervalId = setInterval(spawnDrop, spawnInterval);
@@ -107,7 +105,12 @@ function stopGame() {
   gameRunning = false;
   clearInterval(spawnIntervalId);
   clearInterval(difficultyIntervalId);
-  drops.forEach(d => d.element.remove());
+  cancelAnimationFrame(gameLoopId);
+  drops.forEach(d => {
+    try {
+      d.element.remove();
+    } catch (e) {}
+  });
   drops = [];
 }
 
@@ -170,7 +173,7 @@ function updateDrops() {
 function gameLoop() {
   if (gameRunning) {
     updateDrops();
-    requestAnimationFrame(gameLoop);
+    gameLoopId = requestAnimationFrame(gameLoop);
   }
 }
 
