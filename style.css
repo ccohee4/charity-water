@@ -26,6 +26,7 @@
   border-radius: 20px;
   opacity: 0.8;
   pointer-events: none;
+  z-index: 1;
 }
 
 .cloud::before {
@@ -65,7 +66,8 @@
   height: 25px;
   border-radius: 50%;
   cursor: pointer;
-  transition: top 0.05s linear;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 .clean {
