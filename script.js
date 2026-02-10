@@ -1,25 +1,117 @@
-const gameArea = document.getElementById("gameArea");
-const scoreDisplay = document.getElementById("score");
-const messageDisplay = document.getElementById("message");
-const resetBtn = document.getElementById("resetBtn");
+let currentDifficulty = 'normal';
 
-let score = 0;
-
-const dropSize = 25;
-const gameWidth = gameArea.offsetWidth;
-const gameHeight = gameArea.offsetHeight;
-let dropSpeed = 2;
-let spawnInterval = 1000;
-let gameRunning = true;
-
-setInterval(() => {
-  if (gameRunning) {
-    dropSpeed += 0.5;
-    if (spawnInterval > 300) spawnInterval -= 50;
+// Difficulty settings
+const difficultySettings = {
+  easy: {
+    dropSpeed: 1,
+    spawnInterval: 1500,
+    difficultyIncrease: 0.2,
+    spawnIntervalDecrease: 20
+  },
+  normal: {
+    dropSpeed: 2,
+    spawnInterval: 1000,
+    difficultyIncrease: 0.5,
+    spawnIntervalDecrease: 50
+  },
+  hard: {
+    dropSpeed: 3,
+    spawnInterval: 600,
+    difficultyIncrease: 0.8,
+    spawnIntervalDecrease: 80
   }
-}, 15000);
+};
 
+// Start page event listeners
+document.querySelectorAll('.difficulty-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    currentDifficulty = this.dataset.difficulty;
+    startGame();
+  });
+});
+
+// Menu button
+document.getElementById('menuBtn').addEventListener('click', () => {
+  goToMenu();
+});
+
+function startGame() {
+  document.getElementById('startPage').classList.add('hidden');
+  document.getElementById('gamePage').classList.remove('hidden');
+  initializeGame();
+}
+
+function goToMenu() {
+  document.getElementById('gamePage').classList.add('hidden');
+  document.getElementById('startPage').classList.remove('hidden');
+  stopGame();
+}
+
+// Game variables
+let gameArea;
+let scoreDisplay;
+let messageDisplay;
+let resetBtn;
+let score = 0;
+let dropSize = 25;
+let gameWidth;
+let gameHeight;
+let dropSpeed;
+let spawnInterval;
+let gameRunning = false;
 let drops = [];
+let spawnIntervalId;
+let difficultyIntervalId;
+
+function initializeGame() {
+  gameArea = document.getElementById("gameArea");
+  scoreDisplay = document.getElementById("score");
+  messageDisplay = document.getElementById("message");
+  resetBtn = document.getElementById("resetBtn");
+  
+  gameWidth = gameArea.offsetWidth;
+  gameHeight = gameArea.offsetHeight;
+  
+  const settings = difficultySettings[currentDifficulty];
+  dropSpeed = settings.dropSpeed;
+  spawnInterval = settings.spawnInterval;
+  
+  score = 0;
+  scoreDisplay.textContent = score;
+  messageDisplay.textContent = "Collect clean water. Avoid pollution!";
+  drops = [];
+  gameRunning = true;
+  
+  // Clear any existing drops
+  gameArea.querySelectorAll('.drop').forEach(drop => drop.remove());
+  
+  resetBtn.addEventListener('click', resetGame);
+  
+  spawnIntervalId = setInterval(spawnDrop, spawnInterval);
+  
+  // Increase difficulty over time
+  difficultyIntervalId = setInterval(() => {
+    const settings = difficultySettings[currentDifficulty];
+    dropSpeed += settings.difficultyIncrease;
+    if (spawnInterval > 300) spawnInterval -= settings.spawnIntervalDecrease;
+    clearInterval(spawnIntervalId);
+    spawnIntervalId = setInterval(spawnDrop, spawnInterval);
+  }, 15000);
+  
+  gameLoop();
+}
+
+function stopGame() {
+  gameRunning = false;
+  clearInterval(spawnIntervalId);
+  clearInterval(difficultyIntervalId);
+  drops.forEach(drop => {
+    try {
+      drop.element.remove();
+    } catch (e) {}
+  });
+  drops = [];
+}
 
 function spawnDrop() {
   if (!gameRunning) return;
@@ -77,15 +169,11 @@ function updateDrops() {
 function gameLoop() {
   if (gameRunning) {
     updateDrops();
+    requestAnimationFrame(gameLoop);
   }
-  requestAnimationFrame(gameLoop);
 }
 
-let spawnIntervalId = setInterval(spawnDrop, spawnInterval);
-
-gameLoop();
-
-resetBtn.addEventListener("click", () => {
+function resetGame() {
   score = 0;
   scoreDisplay.textContent = score;
   messageDisplay.textContent = "Collect clean water. Avoid pollution!";
@@ -97,9 +185,23 @@ resetBtn.addEventListener("click", () => {
   });
   drops = [];
   
-  dropSpeed = 2;
-  spawnInterval = 1000;
+  const settings = difficultySettings[currentDifficulty];
+  dropSpeed = settings.dropSpeed;
+  spawnInterval = settings.spawnInterval;
   gameRunning = true;
+  
   clearInterval(spawnIntervalId);
+  clearInterval(difficultyIntervalId);
+  
   spawnIntervalId = setInterval(spawnDrop, spawnInterval);
-});
+  
+  difficultyIntervalId = setInterval(() => {
+    const settings = difficultySettings[currentDifficulty];
+    dropSpeed += settings.difficultyIncrease;
+    if (spawnInterval > 300) spawnInterval -= settings.spawnIntervalDecrease;
+    clearInterval(spawnIntervalId);
+    spawnIntervalId = setInterval(spawnDrop, spawnInterval);
+  }, 15000);
+  
+  gameLoop();
+}
