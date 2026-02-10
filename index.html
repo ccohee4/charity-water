@@ -7,17 +7,45 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
-        <h1>Charity: Water 💧</h1>
-        <p>Score: <span id="score">0</span></p>
-        <p id="message">Collect clean water. Avoid pollution!</p>
-        <button id="resetBtn">Reset Game</button>
-        <div id="gameArea">
-            <div class="cloud" style="top: 20px; left: 30px; animation: float 6s ease-in-out infinite;"></div>
-            <div class="cloud" style="top: 80px; left: 250px; animation: float 8s ease-in-out infinite; animation-delay: 2s;"></div>
-            <div class="cloud" style="top: 150px; left: 100px; animation: float 10s ease-in-out infinite; animation-delay: 4s;"></div>
+    <div id="startPage" class="page">
+        <div class="start-container">
+            <h1>Charity: Water 💧</h1>
+            <p>Help clean water reach communities in need!</p>
+            <h2>Select Difficulty:</h2>
+            <div class="difficulty-buttons">
+                <button class="difficulty-btn easy-btn" data-difficulty="easy">
+                    <span>EASY</span>
+                    <small>Slow drops, slower spawn</small>
+                </button>
+                <button class="difficulty-btn normal-btn" data-difficulty="normal">
+                    <span>NORMAL</span>
+                    <small>Medium speed</small>
+                </button>
+                <button class="difficulty-btn hard-btn" data-difficulty="hard">
+                    <span>HARD</span>
+                    <small>Fast drops, rapid spawn</small>
+                </button>
+            </div>
         </div>
     </div>
+
+    <div id="gamePage" class="page hidden">
+        <div class="game-container">
+            <h1>Charity: Water 💧</h1>
+            <p>Score: <span id="score">0</span></p>
+            <p id="message">Collect clean water. Avoid pollution!</p>
+            <div class="button-group">
+                <button id="resetBtn">Reset Game</button>
+                <button id="menuBtn">Back to Menu</button>
+            </div>
+            <div id="gameArea">
+                <div class="cloud" style="top: 20px; left: 30px; animation: float 6s ease-in-out infinite;"></div>
+                <div class="cloud" style="top: 80px; left: 250px; animation: float 8s ease-in-out infinite; animation-delay: 2s;"></div>
+                <div class="cloud" style="top: 150px; left: 100px; animation: float 10s ease-in-out infinite; animation-delay: 4s;"></div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
