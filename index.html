@@ -1,1 +1,23 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Charity: Water 💧</title><link rel="stylesheet" href="style.css"></head><body><div class="game-container"><h1>Charity: Water 💧</h1><p>Score: <span id="score">0</span></p><p id="message">Collect clean water. Avoid pollution!</p><button id="resetBtn">Reset Game</button><div id="gameArea"></div></div><script src="script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charity: Water 💧</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Charity: Water 💧</h1>
+        <p>Score: <span id="score">0</span></p>
+        <p id="message">Collect clean water. Avoid pollution!</p>
+        <button id="resetBtn">Reset Game</button>
+        <div id="gameArea">
+            <div class="cloud" style="top: 20px; left: 30px; animation: float 6s ease-in-out infinite;"></div>
+            <div class="cloud" style="top: 80px; left: 250px; animation: float 8s ease-in-out infinite; animation-delay: 2s;"></div>
+            <div class="cloud" style="top: 150px; left: 100px; animation: float 10s ease-in-out infinite; animation-delay: 4s;"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
