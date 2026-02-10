@@ -4,69 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Charity: Water 💧</title>
-  <!-- Proxima Nova / Avenir fallback for typography -->
-  <link href="https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Start Page -->
+
+  <!-- START PAGE -->
   <div id="startPage" class="page">
     <div class="start-container">
       <h1>Charity: Water 💧</h1>
       <p>Help clean water reach communities in need!</p>
-
-      <!-- Highscore Display -->
+      
+      <!-- Highscores -->
       <div class="highscore-display">
         <h3>🏆 High Scores</h3>
-        <div class="highscore-row">
-          <span>Easy:</span>
-          <span id="easyHighscore">0</span>
-        </div>
-        <div class="highscore-row">
-          <span>Normal:</span>
-          <span id="normalHighscore">0</span>
-        </div>
-        <div class="highscore-row">
-          <span>Hard:</span>
-          <span id="hardHighscore">0</span>
-        </div>
+        <div class="highscore-row"><span>Easy:</span> <span id="easyHighscore">0</span></div>
+        <div class="highscore-row"><span>Normal:</span> <span id="normalHighscore">0</span></div>
+        <div class="highscore-row"><span>Hard:</span> <span id="hardHighscore">0</span></div>
       </div>
 
+      <!-- Difficulty buttons -->
       <h2>Select Difficulty:</h2>
       <div class="difficulty-buttons">
-        <button class="difficulty-btn easy-btn" data-difficulty="easy">EASY</button>
-        <button class="difficulty-btn normal-btn" data-difficulty="normal">NORMAL</button>
-        <button class="difficulty-btn hard-btn" data-difficulty="hard">HARD</button>
+        <button class="difficulty-btn" data-difficulty="easy">EASY</button>
+        <button class="difficulty-btn" data-difficulty="normal">NORMAL</button>
+        <button class="difficulty-btn" data-difficulty="hard">HARD</button>
       </div>
     </div>
   </div>
 
-  <!-- Game Page -->
+  <!-- GAME PAGE -->
   <div id="gamePage" class="page hidden">
     <div class="game-container">
       <h1>Charity: Water 💧</h1>
 
+      <!-- Score displays -->
       <div class="score-container">
-        <div>
-          <p>Score: <span id="score">0</span></p>
-        </div>
-        <div>
-          <p>High Score: <span id="currentHighscore">0</span></p>
-        </div>
+        <div>Score: <span id="score">0</span></div>
+        <div>High Score: <span id="currentHighscore">0</span></div>
       </div>
 
       <p id="message">Collect clean water. Avoid pollution!</p>
 
+      <!-- Buttons -->
       <div class="button-group">
         <button id="resetBtn">Reset Game</button>
         <button id="menuBtn">Back to Menu</button>
       </div>
 
+      <!-- Game Area -->
       <div id="gameArea">
-        <!-- Clouds as decoration -->
-        <div class="cloud" style="top: 20px; left: 30px;"></div>
-        <div class="cloud" style="top: 80px; left: 250px;"></div>
-        <div class="cloud" style="top: 150px; left: 100px;"></div>
+        <!-- Optional clouds -->
+        <div class="cloud" style="top: 20px; left: 30px; animation: float 6s ease-in-out infinite;"></div>
+        <div class="cloud" style="top: 80px; left: 250px; animation: float 8s ease-in-out infinite; animation-delay: 2s;"></div>
+        <div class="cloud" style="top: 150px; left: 100px; animation: float 10s ease-in-out infinite; animation-delay: 4s;"></div>
       </div>
     </div>
   </div>
