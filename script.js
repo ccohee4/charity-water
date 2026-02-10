@@ -1,4 +1,5 @@
 let currentDifficulty = 'normal';
+
 const difficultySettings = {
   easy: { dropSpeed: 1, spawnInterval: 1500, difficultyIncrease: 0.2, spawnIntervalDecrease: 20 },
   normal: { dropSpeed: 2, spawnInterval: 1000, difficultyIncrease: 0.5, spawnIntervalDecrease: 50 },
@@ -8,161 +9,182 @@ const difficultySettings = {
 // Highscores
 function initHighscores() {
   if (!localStorage.getItem('charityWaterHighscores')) {
-    localStorage.setItem('charityWaterHighscores', JSON.stringify({ easy:0, normal:0, hard:0 }));
+    localStorage.setItem('charityWaterHighscores', JSON.stringify({ easy: 0, normal: 0, hard: 0 }));
   }
   displayHighscores();
 }
 
 function displayHighscores() {
-  const hs = JSON.parse(localStorage.getItem('charityWaterHighscores'));
-  document.getElementById('easyHighscore').textContent = hs.easy;
-  document.getElementById('normalHighscore').textContent = hs.normal;
-  document.getElementById('hardHighscore').textContent = hs.hard;
+  const highscores = JSON.parse(localStorage.getItem('charityWaterHighscores'));
+  document.getElementById('easyHighscore').textContent = highscores.easy;
+  document.getElementById('normalHighscore').textContent = highscores.normal;
+  document.getElementById('hardHighscore').textContent = highscores.hard;
 }
 
 function updateHighscore(score) {
-  const hs = JSON.parse(localStorage.getItem('charityWaterHighscores'));
-  if(score > hs[currentDifficulty]){
-    hs[currentDifficulty] = score;
-    localStorage.setItem('charityWaterHighscores', JSON.stringify(hs));
+  const highscores = JSON.parse(localStorage.getItem('charityWaterHighscores'));
+  if (score > highscores[currentDifficulty]) {
+    highscores[currentDifficulty] = score;
+    localStorage.setItem('charityWaterHighscores', JSON.stringify(highscores));
     displayHighscores();
     return true;
   }
   return false;
 }
 
+// Game variables
+let gameArea, scoreDisplay, messageDisplay, resetBtn, currentHighscoreDisplay;
+let score = 0, dropSize = 25, gameWidth, gameHeight, dropSpeed, spawnInterval;
+let gameRunning = false, drops = [], spawnIntervalId, difficultyIntervalId;
+
+// Initialize highscores
 initHighscores();
 
-// Difficulty buttons
-document.querySelectorAll('.difficulty-btn').forEach(btn=>{
-  btn.addEventListener('click', ()=>{ 
+// Start Game & Menu buttons
+document.querySelectorAll('.difficulty-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
     currentDifficulty = btn.dataset.difficulty;
     startGame();
   });
 });
+document.getElementById('menuBtn').addEventListener('click', goToMenu);
 
-document.getElementById('menuBtn').addEventListener('click', ()=>goToMenu());
-
-let gameArea, scoreDisplay, messageDisplay, resetBtn, currentHighscoreDisplay;
-let score=0, drops=[], gameRunning=false, dropSize=25, spawnInterval, dropSpeed;
-let spawnIntervalId, difficultyIntervalId;
-
-function startGame(){
+function startGame() {
   document.getElementById('startPage').classList.add('hidden');
   document.getElementById('gamePage').classList.remove('hidden');
   initializeGame();
 }
 
-function goToMenu(){
-  stopGame();
+function goToMenu() {
   document.getElementById('gamePage').classList.add('hidden');
   document.getElementById('startPage').classList.remove('hidden');
   displayHighscores();
+  stopGame();
 }
 
-function initializeGame(){
+function initializeGame() {
   gameArea = document.getElementById("gameArea");
   scoreDisplay = document.getElementById("score");
   messageDisplay = document.getElementById("message");
   resetBtn = document.getElementById("resetBtn");
   currentHighscoreDisplay = document.getElementById("currentHighscore");
 
+  gameWidth = gameArea.offsetWidth;
+  gameHeight = gameArea.offsetHeight;
+
   const settings = difficultySettings[currentDifficulty];
   dropSpeed = settings.dropSpeed;
   spawnInterval = settings.spawnInterval;
 
-  score=0;
-  scoreDisplay.textContent=score;
-  const hs = JSON.parse(localStorage.getItem('charityWaterHighscores'));
-  currentHighscoreDisplay.textContent=hs[currentDifficulty];
-  drops=[]; gameRunning=true;
+  score = 0;
+  scoreDisplay.textContent = score;
+  currentHighscoreDisplay.textContent = JSON.parse(localStorage.getItem('charityWaterHighscores'))[currentDifficulty];
 
-  // Remove previous drops
-  gameArea.querySelectorAll('.drop').forEach(d=>d.remove());
+  messageDisplay.textContent = "Collect clean water. Avoid pollution!";
+  drops = [];
+  gameRunning = true;
 
-  resetBtn.onclick = resetGame;
+  // Clear any old drops
+  gameArea.querySelectorAll('.drop').forEach(drop => drop.remove());
+
+  resetBtn.addEventListener('click', resetGame);
 
   spawnIntervalId = setInterval(spawnDrop, spawnInterval);
 
-  difficultyIntervalId = setInterval(()=>{
+  difficultyIntervalId = setInterval(() => {
     dropSpeed += settings.difficultyIncrease;
-    if(spawnInterval>300) spawnInterval -= settings.spawnIntervalDecrease;
+    if (spawnInterval > 300) spawnInterval -= settings.spawnIntervalDecrease;
     clearInterval(spawnIntervalId);
     spawnIntervalId = setInterval(spawnDrop, spawnInterval);
-  },15000);
+  }, 15000);
 
   gameLoop();
 }
 
-function stopGame(){
-  gameRunning=false;
+function stopGame() {
+  gameRunning = false;
   clearInterval(spawnIntervalId);
   clearInterval(difficultyIntervalId);
-  drops.forEach(d=>d.element.remove());
-  drops=[];
+  drops.forEach(d => d.element.remove());
+  drops = [];
 }
 
-function spawnDrop(){
-  if(!gameRunning) return;
+function spawnDrop() {
+  if (!gameRunning) return;
 
   const drop = document.createElement("div");
   drop.classList.add("drop");
-  drop.classList.add(Math.random()<0.7 ? "clean":"bad");
-  const leftPos = Math.random()*(gameArea.offsetWidth-dropSize);
+
+  // Use correct CSS classes
+  if (Math.random() < 0.7) {
+    drop.classList.add("clean-drop");
+  } else {
+    drop.classList.add("pollution-drop");
+  }
+
+  const leftPos = Math.random() * (gameWidth - dropSize);
   drop.style.left = leftPos + "px";
   drop.style.top = "0px";
 
-  const dropObj = {element: drop, top:0, isClean: drop.classList.contains("clean")};
+  const dropObj = { element: drop, top: 0, isClean: drop.classList.contains("clean-drop") };
 
-  drop.addEventListener("click", (e)=>{
+  drop.addEventListener("click", e => {
     e.stopPropagation();
-    score += dropObj.isClean ? 10 : -5;
-    messageDisplay.textContent = dropObj.isClean ? "Great! +10 points!" : "Oops! -5 points!";
+    if (dropObj.isClean) {
+      score += 10;
+      messageDisplay.textContent = "Great! +10 points!";
+    } else {
+      score -= 5;
+      messageDisplay.textContent = "Oops! -5 points!";
+    }
     scoreDisplay.textContent = score;
     currentHighscoreDisplay.textContent = Math.max(score, parseInt(currentHighscoreDisplay.textContent));
     drop.remove();
-    drops = drops.filter(d => d!==dropObj);
+    drops = drops.filter(d => d !== dropObj);
   });
 
   gameArea.appendChild(drop);
   drops.push(dropObj);
 }
 
-function updateDrops(){
-  drops = drops.filter(d=>{
-    d.top += dropSpeed;
-    d.element.style.top = d.top + "px";
-    if(d.top>gameArea.offsetHeight){ d.element.remove(); return false; }
+function updateDrops() {
+  drops = drops.filter(drop => {
+    drop.top += dropSpeed;
+    drop.element.style.top = drop.top + "px";
+    if (drop.top > gameHeight) {
+      drop.element.remove();
+      return false;
+    }
     return true;
   });
 }
 
-function gameLoop(){
-  if(gameRunning){
+function gameLoop() {
+  if (gameRunning) {
     updateDrops();
     requestAnimationFrame(gameLoop);
   }
 }
 
-function resetGame(){
-  if(updateHighscore(score)){
-    messageDisplay.textContent="🏆 NEW HIGH SCORE! 🏆";
-  }
-  score=0; scoreDisplay.textContent=score;
-  setTimeout(()=>{messageDisplay.textContent="Collect clean water. Avoid pollution!";},2000);
-  drops.forEach(d=>d.element.remove());
-  drops=[];
-  const settings=difficultySettings[currentDifficulty];
-  dropSpeed=settings.dropSpeed;
-  spawnInterval=settings.spawnInterval;
-  gameRunning=true;
-  clearInterval(spawnIntervalId); clearInterval(difficultyIntervalId);
+function resetGame() {
+  updateHighscore(score);
+  score = 0;
+  scoreDisplay.textContent = score;
+  messageDisplay.textContent = "Collect clean water. Avoid pollution!";
+  drops.forEach(d => gameArea.removeChild(d.element));
+  drops = [];
+  const settings = difficultySettings[currentDifficulty];
+  dropSpeed = settings.dropSpeed;
+  spawnInterval = settings.spawnInterval;
+  clearInterval(spawnIntervalId);
+  clearInterval(difficultyIntervalId);
   spawnIntervalId = setInterval(spawnDrop, spawnInterval);
-  difficultyIntervalId = setInterval(()=>{
+  difficultyIntervalId = setInterval(() => {
     dropSpeed += settings.difficultyIncrease;
-    if(spawnInterval>300) spawnInterval -= settings.spawnIntervalDecrease;
+    if (spawnInterval > 300) spawnInterval -= settings.spawnIntervalDecrease;
     clearInterval(spawnIntervalId);
     spawnIntervalId = setInterval(spawnDrop, spawnInterval);
-  },15000);
+  }, 15000);
+  gameRunning = true;
   gameLoop();
 }
