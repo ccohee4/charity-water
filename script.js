@@ -10,15 +10,20 @@ const gameWidth = gameArea.offsetWidth;
 const gameHeight = gameArea.offsetHeight;
 let dropSpeed = 2;
 let spawnInterval = 1000;
+let gameRunning = true;
 
 setInterval(() => {
-  dropSpeed += 0.5;
-  if (spawnInterval > 300) spawnInterval -= 50;
+  if (gameRunning) {
+    dropSpeed += 0.5;
+    if (spawnInterval > 300) spawnInterval -= 50;
+  }
 }, 15000);
 
 let drops = [];
 
 function spawnDrop() {
+  if (!gameRunning) return;
+  
   const drop = document.createElement("div");
   drop.classList.add("drop");
 
@@ -28,10 +33,18 @@ function spawnDrop() {
     drop.classList.add("bad");
   }
 
-  drop.style.left = Math.random() * (gameWidth - dropSize) + "px";
-  drop.style.top = "-" + dropSize + "px";
+  const leftPos = Math.random() * (gameWidth - dropSize);
+  drop.style.left = leftPos + "px";
+  drop.style.top = "0px";
 
-  drop.addEventListener("click", function() {
+  const dropObj = {
+    element: drop,
+    top: 0,
+    isClean: drop.classList.contains("clean")
+  };
+
+  drop.addEventListener("click", function(e) {
+    e.stopPropagation();
     if (drop.classList.contains("clean")) {
       score += 10;
       messageDisplay.textContent = "Great! +10 points!";
@@ -41,14 +54,11 @@ function spawnDrop() {
     }
     scoreDisplay.textContent = score;
     drop.remove();
+    drops = drops.filter(d => d !== dropObj);
   });
 
   gameArea.appendChild(drop);
-  drops.push({
-    element: drop,
-    top: -dropSize,
-    isClean: drop.classList.contains("clean")
-  });
+  drops.push(dropObj);
 }
 
 function updateDrops() {
@@ -65,7 +75,9 @@ function updateDrops() {
 }
 
 function gameLoop() {
-  updateDrops();
+  if (gameRunning) {
+    updateDrops();
+  }
   requestAnimationFrame(gameLoop);
 }
 
@@ -78,12 +90,16 @@ resetBtn.addEventListener("click", () => {
   scoreDisplay.textContent = score;
   messageDisplay.textContent = "Collect clean water. Avoid pollution!";
 
-  drops.forEach(drop => gameArea.removeChild(drop.element));
+  drops.forEach(drop => {
+    try {
+      gameArea.removeChild(drop.element);
+    } catch (e) {}
+  });
   drops = [];
   
   dropSpeed = 2;
   spawnInterval = 1000;
+  gameRunning = true;
   clearInterval(spawnIntervalId);
   spawnIntervalId = setInterval(spawnDrop, spawnInterval);
 });
-// Existing content to be retrieved before updating.
