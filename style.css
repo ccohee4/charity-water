@@ -40,11 +40,16 @@ body {
   border-radius: 10px;
   margin-bottom: 20px;
 }
+
 .highscore-row {
   display: flex;
   justify-content: space-between;
   margin: 5px 0;
   font-weight: bold;
+}
+
+.highscore-row span:last-child {
+  color: #ffc907;
 }
 
 /* Difficulty Buttons */
@@ -66,12 +71,22 @@ body {
   color: #1a1a1a;
   transition: transform 0.2s;
 }
+
 .difficulty-btn:hover {
   transform: scale(1.05);
 }
-.easy-btn { background-color: #77a8bb; }
-.normal-btn { background-color: #ffc907; }
-.hard-btn { background-color: #bf6c46; }
+
+.easy-btn {
+  background-color: #77a8bb;
+}
+
+.normal-btn {
+  background-color: #ffc907;
+}
+
+.hard-btn {
+  background-color: #bf6c46;
+}
 
 /* Game Container */
 .game-container {
@@ -80,6 +95,12 @@ body {
   align-items: center;
   gap: 10px;
   width: 100%;
+  padding: 20px;
+}
+
+.game-container h1 {
+  color: #003366;
+  margin-bottom: 10px;
 }
 
 /* Score Container */
@@ -88,14 +109,30 @@ body {
   gap: 20px;
   font-size: 18px;
 }
-.score-text { color: #77a8bb; }
-.high-score-text { color: #ffc907; }
+
+#score {
+  color: #003366;
+  font-weight: bold;
+}
+
+#currentHighscore {
+  color: #ffc907;
+  font-weight: bold;
+}
+
+#message {
+  font-size: 16px;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
 
 /* Buttons */
 .button-group {
   display: flex;
   gap: 10px;
+  margin-bottom: 10px;
 }
+
 #resetBtn, #menuBtn {
   padding: 8px 16px;
   font-weight: bold;
@@ -104,53 +141,97 @@ body {
   cursor: pointer;
   transition: background 0.2s;
 }
-#resetBtn { background-color: #ffc907; color: #1a1a1a; }
-#resetBtn:hover { background-color: #fed8c1; }
-#menuBtn { background-color: #003366; color: #fff; }
-#menuBtn:hover { background-color: #1a1a1a; }
+
+#resetBtn {
+  background-color: #ffc907;
+  color: #1a1a1a;
+}
+
+#resetBtn:hover {
+  background-color: #fed8c1;
+}
+
+#menuBtn {
+  background-color: #003366;
+  color: #fff;
+}
+
+#menuBtn:hover {
+  background-color: #1a1a1a;
+}
 
 /* Game Area */
 #gameArea {
   position: relative;
   width: 400px;
   height: 400px;
-  border: 2px solid #003366;
-  background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+  border: 3px solid #003366;
+  background: #77a8bb;
   margin: 20px 0;
   overflow: hidden;
   border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-/* Drops */
+/* Clouds */
+.cloud {
+  position: absolute;
+  width: 60px;
+  height: 20px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cloud::before {
+  content: '';
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  top: -15px;
+  left: 5px;
+}
+
+.cloud::after {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  top: -10px;
+  right: 10px;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(20px);
+  }
+}
+
+/* Drops - THIS WAS INCOMPLETE BEFORE */
 .drop {
   position: absolute;
   width: 25px;
   height: 25px;
   border-radius: 50%;
   cursor: pointer;
-  transition: top 0.05s linear;
-}
-.clean-drop { background-color: #ffc907; }
-.pollution-drop { background-color: #bf6c46; }
-
-/* Clouds */
-.cloud {
-  position: absolute;
-  width: 60px;
-  height: 40px;
-  background-color: #ffffff;
-  border-radius: 50%;
-  opacity: 0.8;
-}
-@keyframes float {
-  0% { transform: translateY(0px); }
- 50% { transform: translateY(15px); }
- 100% { transform: translateY(0px); }
+  z-index: 10;
+  pointer-events: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Messages */
-#message {
-  font-weight: bold;
-  margin: 10px 0;
-  color: #003366;
+.clean {
+  background-color: #ffc907;
+}
+
+.bad {
+  background-color: #bf6c46;
 }
