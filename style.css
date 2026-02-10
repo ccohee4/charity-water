@@ -1,48 +1,156 @@
-.container {
-    background-color: #cbccd1;
-}
-
+/* Body & Typography */
 body {
-    background-color: #fff7e1;
-    color: #1a1a1a;
+  font-family: 'Proxima Nova', Avenir, Georgia, sans-serif;
+  background-color: #fff7e1;
+  color: #1a1a1a;
+  margin: 0;
+  padding: 0;
 }
 
-title {
-    color: #003366;
+/* Pages */
+.page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.easy-button {
-    background-color: #77a8bb;
+.hidden {
+  display: none;
 }
 
-.normal-button {
-    background-color: #ffc907;
+/* Start Container */
+.start-container {
+  text-align: center;
+  background-color: #cbccd1;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 500px;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
-.hard-button {
-    background-color: #bf6c46;
+/* Highscore Display */
+.highscore-display {
+  background-color: #fed8c1;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.highscore-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  font-weight: bold;
 }
 
-.clean-drop {
-    background-color: #ffc907;
+/* Difficulty Buttons */
+.difficulty-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.pollution-drop {
-    background-color: #bf6c46;
+.difficulty-btn {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #1a1a1a;
+  transition: transform 0.2s;
+}
+.difficulty-btn:hover {
+  transform: scale(1.05);
+}
+.easy-btn { background-color: #77a8bb; }
+.normal-btn { background-color: #ffc907; }
+.hard-btn { background-color: #bf6c46; }
+
+/* Game Container */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
-.score-text {
-    color: #003366;
+/* Score Container */
+.score-container {
+  display: flex;
+  gap: 20px;
+  font-size: 18px;
+}
+.score-text { color: #77a8bb; }
+.high-score-text { color: #ffc907; }
+
+/* Buttons */
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+#resetBtn, #menuBtn {
+  padding: 8px 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#resetBtn { background-color: #ffc907; color: #1a1a1a; }
+#resetBtn:hover { background-color: #fed8c1; }
+#menuBtn { background-color: #003366; color: #fff; }
+#menuBtn:hover { background-color: #1a1a1a; }
+
+/* Game Area */
+#gameArea {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  border: 2px solid #003366;
+  background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
+  margin: 20px 0;
+  overflow: hidden;
+  border-radius: 15px;
 }
 
-.high-score-text {
-    color: #ffc907;
+/* Drops */
+.drop {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: top 0.05s linear;
+}
+.clean-drop { background-color: #ffc907; }
+.pollution-drop { background-color: #bf6c46; }
+
+/* Clouds */
+.cloud {
+  position: absolute;
+  width: 60px;
+  height: 40px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+@keyframes float {
+  0% { transform: translateY(0px); }
+ 50% { transform: translateY(15px); }
+ 100% { transform: translateY(0px); }
 }
 
-.clouds {
-    background-color: #ffffff;
-}
-
-.accent {
-    background-color: #fed8c1;
+/* Messages */
+#message {
+  font-weight: bold;
+  margin: 10px 0;
+  color: #003366;
 }
