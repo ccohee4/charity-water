@@ -11,6 +11,23 @@
         <div class="start-container">
             <h1>Charity: Water 💧</h1>
             <p>Help clean water reach communities in need!</p>
+            
+            <div class="highscore-display">
+                <h3>🏆 High Scores</h3>
+                <div class="highscore-row">
+                    <span>🟢 Easy:</span>
+                    <span id="easyHighscore">0</span>
+                </div>
+                <div class="highscore-row">
+                    <span>🟡 Normal:</span>
+                    <span id="normalHighscore">0</span>
+                </div>
+                <div class="highscore-row">
+                    <span>🔴 Hard:</span>
+                    <span id="hardHighscore">0</span>
+                </div>
+            </div>
+            
             <h2>Select Difficulty:</h2>
             <div class="difficulty-buttons">
                 <button class="difficulty-btn easy-btn" data-difficulty="easy">
@@ -32,7 +49,14 @@
     <div id="gamePage" class="page hidden">
         <div class="game-container">
             <h1>Charity: Water 💧</h1>
-            <p>Score: <span id="score">0</span></p>
+            <div class="score-container">
+                <div>
+                    <p>Score: <span id="score">0</span></p>
+                </div>
+                <div>
+                    <p>High Score: <span id="currentHighscore">0</span></p>
+                </div>
+            </div>
             <p id="message">Collect clean water. Avoid pollution!</p>
             <div class="button-group">
                 <button id="resetBtn">Reset Game</button>
