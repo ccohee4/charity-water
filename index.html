@@ -1,66 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Charity: Water 💧</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charity: Water 💧</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- START PAGE -->
-  <div id="startPage" class="page">
+<!-- Start Page -->
+<div id="startPage" class="page">
     <div class="start-container">
-      <h1>Charity: Water 💧</h1>
-      <p>Help clean water reach communities in need!</p>
-      
-      <!-- Highscores -->
-      <div class="highscore-display">
-        <h3>🏆 High Scores</h3>
-        <div class="highscore-row"><span>Easy:</span> <span id="easyHighscore">0</span></div>
-        <div class="highscore-row"><span>Normal:</span> <span id="normalHighscore">0</span></div>
-        <div class="highscore-row"><span>Hard:</span> <span id="hardHighscore">0</span></div>
-      </div>
+        <h1>Charity: Water 💧</h1>
+        <p>Help clean water reach communities in need!</p>
 
-      <!-- Difficulty buttons -->
-      <h2>Select Difficulty:</h2>
-      <div class="difficulty-buttons">
-        <button class="difficulty-btn" data-difficulty="easy">EASY</button>
-        <button class="difficulty-btn" data-difficulty="normal">NORMAL</button>
-        <button class="difficulty-btn" data-difficulty="hard">HARD</button>
-      </div>
+        <div class="highscore-display">
+            <h3>🏆 High Scores</h3>
+            <div class="highscore-row"><span>Easy:</span><span id="easyHighscore">0</span></div>
+            <div class="highscore-row"><span>Normal:</span><span id="normalHighscore">0</span></div>
+            <div class="highscore-row"><span>Hard:</span><span id="hardHighscore">0</span></div>
+        </div>
+
+        <h2>Select Difficulty:</h2>
+        <div class="difficulty-buttons">
+            <button class="difficulty-btn" data-difficulty="easy">EASY</button>
+            <button class="difficulty-btn" data-difficulty="normal">NORMAL</button>
+            <button class="difficulty-btn" data-difficulty="hard">HARD</button>
+        </div>
     </div>
-  </div>
+</div>
 
-  <!-- GAME PAGE -->
-  <div id="gamePage" class="page hidden">
+<!-- Game Page -->
+<div id="gamePage" class="page hidden">
     <div class="game-container">
-      <h1>Charity: Water 💧</h1>
+        <h1>Charity: Water 💧</h1>
 
-      <!-- Score displays -->
-      <div class="score-container">
-        <div>Score: <span id="score">0</span></div>
-        <div>High Score: <span id="currentHighscore">0</span></div>
-      </div>
+        <div class="score-container">
+            <div>Score: <span id="score">0</span></div>
+            <div>High Score: <span id="currentHighscore">0</span></div>
+        </div>
 
-      <p id="message">Collect clean water. Avoid pollution!</p>
+        <p id="message">Collect clean water. Avoid pollution!</p>
 
-      <!-- Buttons -->
-      <div class="button-group">
-        <button id="resetBtn">Reset Game</button>
-        <button id="menuBtn">Back to Menu</button>
-      </div>
+        <div class="button-group">
+            <button id="resetBtn">Reset Game</button>
+            <button id="menuBtn">Back to Menu</button>
+        </div>
 
-      <!-- Game Area -->
-      <div id="gameArea">
-        <!-- Optional clouds -->
-        <div class="cloud" style="top: 20px; left: 30px; animation: float 6s ease-in-out infinite;"></div>
-        <div class="cloud" style="top: 80px; left: 250px; animation: float 8s ease-in-out infinite; animation-delay: 2s;"></div>
-        <div class="cloud" style="top: 150px; left: 100px; animation: float 10s ease-in-out infinite; animation-delay: 4s;"></div>
-      </div>
+        <div id="gameArea">
+            <div class="cloud" style="top: 20px; left: 30px;"></div>
+            <div class="cloud" style="top: 80px; left: 250px;"></div>
+            <div class="cloud" style="top: 150px; left: 100px;"></div>
+        </div>
     </div>
-  </div>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
