@@ -22,6 +22,39 @@ const difficultySettings = {
   }
 };
 
+// Initialize highscores from localStorage
+function initHighscores() {
+  if (!localStorage.getItem('charityWaterHighscores')) {
+    localStorage.setItem('charityWaterHighscores', JSON.stringify({
+      easy: 0,
+      normal: 0,
+      hard: 0
+    }));
+  }
+  displayHighscores();
+}
+
+function displayHighscores() {
+  const highscores = JSON.parse(localStorage.getItem('charityWaterHighscores'));
+  document.getElementById('easyHighscore').textContent = highscores.easy;
+  document.getElementById('normalHighscore').textContent = highscores.normal;
+  document.getElementById('hardHighscore').textContent = highscores.hard;
+}
+
+function updateHighscore(score) {
+  const highscores = JSON.parse(localStorage.getItem('charityWaterHighscores'));
+  if (score > highscores[currentDifficulty]) {
+    highscores[currentDifficulty] = score;
+    localStorage.setItem('charityWaterHighscores', JSON.stringify(highscores));
+    displayHighscores();
+    return true;
+  }
+  return false;
+}
+
+// Initialize on page load
+initHighscores();
+
 // Start page event listeners
 document.querySelectorAll('.difficulty-btn').forEach(btn => {
   btn.addEventListener('click', function() {
@@ -44,6 +77,7 @@ function startGame() {
 function goToMenu() {
   document.getElementById('gamePage').classList.add('hidden');
   document.getElementById('startPage').classList.remove('hidden');
+  displayHighscores();
   stopGame();
 }
 
@@ -52,6 +86,7 @@ let gameArea;
 let scoreDisplay;
 let messageDisplay;
 let resetBtn;
+let currentHighscoreDisplay;
 let score = 0;
 let dropSize = 25;
 let gameWidth;
@@ -68,6 +103,7 @@ function initializeGame() {
   scoreDisplay = document.getElementById("score");
   messageDisplay = document.getElementById("message");
   resetBtn = document.getElementById("resetBtn");
+  currentHighscoreDisplay = document.getElementById("currentHighscore");
   
   gameWidth = gameArea.offsetWidth;
   gameHeight = gameArea.offsetHeight;
@@ -78,6 +114,10 @@ function initializeGame() {
   
   score = 0;
   scoreDisplay.textContent = score;
+  
+  const highscores = JSON.parse(localStorage.getItem('charityWaterHighscores'));
+  currentHighscoreDisplay.textContent = highscores[currentDifficulty];
+  
   messageDisplay.textContent = "Collect clean water. Avoid pollution!";
   drops = [];
   gameRunning = true;
@@ -145,6 +185,7 @@ function spawnDrop() {
       messageDisplay.textContent = "Oops! -5 points!";
     }
     scoreDisplay.textContent = score;
+    currentHighscoreDisplay.textContent = Math.max(score, parseInt(currentHighscoreDisplay.textContent));
     drop.remove();
     drops = drops.filter(d => d !== dropObj);
   });
@@ -174,9 +215,19 @@ function gameLoop() {
 }
 
 function resetGame() {
+  // Check if score beats highscore
+  const isNewHighscore = updateHighscore(score);
+  
+  if (isNewHighscore) {
+    messageDisplay.textContent = "🏆 NEW HIGH SCORE! 🏆";
+  }
+  
   score = 0;
   scoreDisplay.textContent = score;
-  messageDisplay.textContent = "Collect clean water. Avoid pollution!";
+  
+  setTimeout(() => {
+    messageDisplay.textContent = "Collect clean water. Avoid pollution!";
+  }, 2000);
 
   drops.forEach(drop => {
     try {
