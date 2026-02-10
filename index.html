@@ -1,1 +1,31 @@
-<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Water Drop Collection Game</title>\n    <style>\n        body {\n            background-color: #cce7ff;\n            font-family: Arial, sans-serif;\n            overflow: hidden;\n        }\n        #game {\n            position: relative;\n            width: 100%;\n            height: 100vh;\n            overflow: hidden;\n        }\n        .drop {\n            position: absolute;\n            width: 30px;\n            height: 30px;\n            background-color: blue;\n            border-radius: 50%;\n        }\n        #score {\n            position: absolute;\n            top: 20px;\n            left: 20px;\n            font-size: 24px;\n            color: white;\n        }\n    </style>\n</head>\n<body>\n    <div id="game">\n        <div id="score">Score: 0</div>\n    </div>\n    <script>\n        let score = 0;\n        const gameArea = document.getElementById('game');\n        const scoreDisplay = document.getElementById('score');\n\n        function createDrop() {\n            const drop = document.createElement('div');\n            drop.classList.add('drop');\n            drop.style.left = Math.random() * 100 + 'vw';\n            drop.style.top = '-30px';\n            gameArea.appendChild(drop);\n            let dropInterval = setInterval(() => {\n                drop.style.top = parseFloat(drop.style.top) + 5 + 'px';\n\n                if (parseFloat(drop.style.top) > window.innerHeight) {\n                    clearInterval(dropInterval);\n                    gameArea.removeChild(drop);\n                }\n            }, 100);\n            drop.addEventListener('click', () => {\n                score++;\n                scoreDisplay.innerText = 'Score: ' + score;\n                clearInterval(dropInterval);\n                gameArea.removeChild(drop);\n            });\n        }\n\n        function startGame() {\n            setInterval(createDrop, 1000);\n        }\n\n        startGame();\n    <\/script>\n</body>\n</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch Clean Water - charity: water Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+
+        <!-- charity: water logo -->
+        <img src="images/charitywater_logo_horizontal_BlackText.png" 
+             alt="charity water logo"
+             width="200">\n
+        <h1>Catch Clean Water 💧</h1>
+
+        <!-- Score display -->
+        <p>Score: <span id="score">0</span></p>
+
+        <!-- Feedback messages -->
+        <p id="message">Collect clean water. Avoid pollution!</p>
+
+        <!-- Game area -->
+        <div id="gameArea"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
