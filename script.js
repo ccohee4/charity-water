@@ -87,13 +87,15 @@ function initializeGame() {
   // Clear any old drops
   gameArea.querySelectorAll('.drop').forEach(drop => drop.remove());
 
-  resetBtn.addEventListener('click', resetGame);
+  // FIXED: Only attach listener once (not multiple times)
+  resetBtn.onclick = resetGame;
 
   spawnIntervalId = setInterval(spawnDrop, spawnInterval);
 
+  const settings2 = difficultySettings[currentDifficulty];
   difficultyIntervalId = setInterval(() => {
-    dropSpeed += settings.difficultyIncrease;
-    if (spawnInterval > 300) spawnInterval -= settings.spawnIntervalDecrease;
+    dropSpeed += settings2.difficultyIncrease;
+    if (spawnInterval > 300) spawnInterval -= settings2.spawnIntervalDecrease;
     clearInterval(spawnIntervalId);
     spawnIntervalId = setInterval(spawnDrop, spawnInterval);
   }, 15000);
@@ -115,42 +117,48 @@ function spawnDrop() {
   const drop = document.createElement("div");
   drop.classList.add("drop");
 
-  // Use correct CSS classes
   if (Math.random() < 0.7) {
-    drop.classList.add("clean-drop");
+    drop.classList.add("clean");
   } else {
-    drop.classList.add("pollution-drop");
+    drop.classList.add("bad");
   }
 
   const leftPos = Math.random() * (gameWidth - dropSize);
   drop.style.left = leftPos + "px";
   drop.style.top = "0px";
 
-  const dropObj = { element: drop, top: 0, isClean: drop.classList.contains("clean-drop") };
-
-  drop.addEventListener("click", e => {
+  drop.addEventListener("click", function(e) {
     e.stopPropagation();
-    if (dropObj.isClean) {
+    if (!gameRunning) return;
+
+    if (drop.classList.contains("clean")) {
       score += 10;
       messageDisplay.textContent = "Great! +10 points!";
     } else {
       score -= 5;
       messageDisplay.textContent = "Oops! -5 points!";
     }
+
     scoreDisplay.textContent = score;
     currentHighscoreDisplay.textContent = Math.max(score, parseInt(currentHighscoreDisplay.textContent));
+
     drop.remove();
-    drops = drops.filter(d => d !== dropObj);
+    drops = drops.filter(d => d.element !== drop);
   });
 
   gameArea.appendChild(drop);
-  drops.push(dropObj);
+  drops.push({
+    element: drop,
+    top: 0,
+    isClean: drop.classList.contains("clean")
+  });
 }
 
 function updateDrops() {
   drops = drops.filter(drop => {
     drop.top += dropSpeed;
     drop.element.style.top = drop.top + "px";
+
     if (drop.top > gameHeight) {
       drop.element.remove();
       return false;
@@ -167,24 +175,43 @@ function gameLoop() {
 }
 
 function resetGame() {
-  updateHighscore(score);
+  const isNewHighscore = updateHighscore(score);
+  
+  if (isNewHighscore) {
+    messageDisplay.textContent = "🏆 NEW HIGH SCORE! 🏆";
+  }
+  
   score = 0;
   scoreDisplay.textContent = score;
-  messageDisplay.textContent = "Collect clean water. Avoid pollution!";
-  drops.forEach(d => gameArea.removeChild(d.element));
+  
+  setTimeout(() => {
+    messageDisplay.textContent = "Collect clean water. Avoid pollution!";
+  }, 2000);
+
+  drops.forEach(drop => {
+    try {
+      gameArea.removeChild(drop.element);
+    } catch (e) {}
+  });
   drops = [];
+  
   const settings = difficultySettings[currentDifficulty];
   dropSpeed = settings.dropSpeed;
   spawnInterval = settings.spawnInterval;
+  gameRunning = true;
+  
   clearInterval(spawnIntervalId);
   clearInterval(difficultyIntervalId);
+  
   spawnIntervalId = setInterval(spawnDrop, spawnInterval);
+  
+  const settings2 = difficultySettings[currentDifficulty];
   difficultyIntervalId = setInterval(() => {
-    dropSpeed += settings.difficultyIncrease;
-    if (spawnInterval > 300) spawnInterval -= settings.spawnIntervalDecrease;
+    dropSpeed += settings2.difficultyIncrease;
+    if (spawnInterval > 300) spawnInterval -= settings2.spawnIntervalDecrease;
     clearInterval(spawnIntervalId);
     spawnIntervalId = setInterval(spawnDrop, spawnInterval);
   }, 15000);
-  gameRunning = true;
+  
   gameLoop();
 }
